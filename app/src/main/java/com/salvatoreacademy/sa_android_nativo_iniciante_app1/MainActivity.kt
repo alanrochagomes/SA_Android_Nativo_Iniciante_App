@@ -35,8 +35,23 @@ class MainActivity : AppCompatActivity() {
         val call = service.listCreatures()
         call.enqueue(object : Callback<List<Creature>> {
             // Resposta da API sucedida
-            override fun onResponse(p0: Call<List<Creature>>, p1: Response<List<Creature>>) {
+            override fun onResponse(p0: Call<List<Creature>>, response: Response<List<Creature>>) {
                 Toast.makeText(this@MainActivity, "Lista de criaturas carregada com sucesso!", Toast.LENGTH_SHORT).show()
+
+                response.body()?.let {
+                    // Busca a RecyclerView pelo ID
+                    val rvCreatures = findViewById<RecyclerView>(R.id.rvCreatures)
+
+//                    val items = listOf(
+//                        Creature(1, "Java", "https://www.salvatore.academy/devmon/1_java.png"),
+//                        Creature(2, "Kotlin", "https://www.salvatore.academy/devmon/2_kotlin.png"),
+//                        Creature(3, "Android", "https://www.salvatore.academy/devmon/3_android.png"),
+//                    )
+
+                    // Adicionamos o Adapter e o LayoutManager
+                    rvCreatures.adapter = CreatureListAdapter(it)
+                    rvCreatures.layoutManager = LinearLayoutManager(this@MainActivity)
+                }
             }
 
             // Resposta da API dê erro
@@ -45,20 +60,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
-
-        // Busca a RecyclerView pelo ID
-        val rvCreatures = findViewById<RecyclerView>(R.id.rvCreatures)
-
-        val items = listOf(
-            Creature(1, "Java", "https://www.salvatore.academy/devmon/1_java.png"),
-            Creature(2, "Kotlin", "https://www.salvatore.academy/devmon/2_kotlin.png"),
-            Creature(3, "Android", "https://www.salvatore.academy/devmon/3_android.png"),
-        )
-
-        // Adicionamos o Adapter e o LayoutManager
-        rvCreatures.adapter = CreatureListAdapter(items)
-        rvCreatures.layoutManager = LinearLayoutManager(this)
-
 
     }
 }
